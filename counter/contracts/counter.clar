@@ -22,12 +22,12 @@
 
 ;; public functions
 (define-public (count-up)
-    (ok (map-set counters tx-sender (+ (get-count ) u1)))
+    (ok (map-set counters tx-sender (+ (get-count tx-sender) u1)))
 )
 
 ;; read only functions
-(define-read-only (get-count)
-    (default-to u0 (map-get? counters tx-sender))
+(define-read-only (get-count (who principal))
+    (default-to u0 (map-get? counters who))
 )
 
 ;; private functions
