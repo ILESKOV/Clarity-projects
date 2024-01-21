@@ -340,53 +340,53 @@ describe("Multisig-vault Contract Tests", () => {
         expect(response.result).toBeErr(uintCV(104)); // err-votes-required-not-met
       });
     });
-    // describe("positive scenarious", () => {
-    //   it("Should update votes map", async () => {
-    //     const deployer = accounts.get("deployer");
-    //     const participant1 = accounts.get("wallet_1");
-    //     const accountNames = Array.from(accounts.keys()).filter((name) =>
-    //       name.startsWith("wallet_")
-    //     );
-    //     if (!deployer || accountNames.length < 1) {
-    //       throw new Error("Required accounts not found");
-    //     }
-    //     const newVotesRequired = 20;
-    //     const memberCount = 100;
+    describe("positive scenarious", () => {
+      it("Should update votes map", async () => {
+        const deployer = accounts.get("deployer");
+        const participant1 = accounts.get("wallet_1");
+        const accountNames = Array.from(accounts.keys()).filter((name) =>
+          name.startsWith("wallet_")
+        );
+        if (!deployer || accountNames.length < 1) {
+          throw new Error("Required accounts not found");
+        }
+        const newVotesRequired = 20;
+        const memberCount = 100;
 
-    //     // Create a list of 100 principals using the available accounts
-    //     const participants = [];
-    //     for (let i = 0; i < memberCount; i++) {
-    //       const accountName = accountNames[i % accountNames.length];
-    //       const account = accounts.get(accountName);
-    //       if (account) {
-    //         participants.push(standardPrincipalCV(account));
-    //       }
-    //     }
+        // Create a list of 100 principals using the available accounts
+        const participants = [];
+        for (let i = 0; i < memberCount; i++) {
+          const accountName = accountNames[i % accountNames.length];
+          const account = accounts.get(accountName);
+          if (account) {
+            participants.push(standardPrincipalCV(account));
+          }
+        }
 
-    //     await simnet.callPublicFn(
-    //       "multisig-vault",
-    //       "start",
-    //       [listCV(participants), uintCV(newVotesRequired)],
-    //       deployer
-    //     );
+        await simnet.callPublicFn(
+          "multisig-vault",
+          "start",
+          [listCV(participants), uintCV(newVotesRequired)],
+          deployer
+        );
 
-    //     await simnet.callPublicFn(
-    //       "multisig-vault",
-    //       "vote",
-    //       [standardPrincipalCV(accounts.get("wallet_5")), boolCV(true)],
-    //       participant1
-    //     );
-    //     const response = simnet.callReadOnlyFn(
-    //       "multisig-vault",
-    //       "get-vote",
-    //       [
-    //         standardPrincipalCV(participant1),
-    //         standardPrincipalCV(accounts.get("wallet_5")),
-    //       ],
-    //       deployer
-    //     );
-    //     expect(response.result).to.deep.equal(boolCV(true));
-    //   });
-    // });
+        await simnet.callPublicFn(
+          "multisig-vault",
+          "vote",
+          [standardPrincipalCV(accounts.get("wallet_5")), boolCV(true)],
+          participant1
+        );
+        const response = simnet.callReadOnlyFn(
+          "multisig-vault",
+          "get-vote",
+          [
+            standardPrincipalCV(participant1),
+            standardPrincipalCV(accounts.get("wallet_5")),
+          ],
+          deployer
+        );
+        expect(response.result).to.deep.equal(boolCV(true));
+      });
+    });
   });
 });
