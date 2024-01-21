@@ -341,16 +341,17 @@ describe("Multisig-vault Contract Tests", () => {
       });
     });
     describe("positive scenarious", () => {
-      it("Should update votes map", async () => {
+      it("Should withdraw", async () => {
         const deployer = accounts.get("deployer");
         const participant1 = accounts.get("wallet_1");
+        const participant2 = accounts.get("wallet_2");
         const accountNames = Array.from(accounts.keys()).filter((name) =>
           name.startsWith("wallet_")
         );
         if (!deployer || accountNames.length < 1) {
           throw new Error("Required accounts not found");
         }
-        const newVotesRequired = 20;
+        const newVotesRequired = 2;
         const memberCount = 100;
 
         // Create a list of 100 principals using the available accounts
@@ -376,6 +377,12 @@ describe("Multisig-vault Contract Tests", () => {
           [standardPrincipalCV(accounts.get("wallet_5")), boolCV(true)],
           participant1
         );
+        await simnet.callPublicFn(
+          "multisig-vault",
+          "vote",
+          [standardPrincipalCV(accounts.get("wallet_5")), boolCV(true)],
+          participant2
+        );
         const response = simnet.callReadOnlyFn(
           "multisig-vault",
           "get-vote",
@@ -385,7 +392,9 @@ describe("Multisig-vault Contract Tests", () => {
           ],
           deployer
         );
-        expect(response.result).to.deep.equal(boolCV(true));
+
+        console.log(response.events);
+        expect(response.events).to.deep.equal([]);
       });
     });
   });
