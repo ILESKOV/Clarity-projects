@@ -47,6 +47,21 @@
     )
 )
 
+(define-public (withdraw)
+    (let
+        (
+            (recipient tx-sender)
+            (total-votes (tally-votes))
+        )
+        (asserts! (>= total-votes (var-get votes-required)) err-votes-required-not-met)
+        (try! (as-contract (stx-transfer? (stx-get-balance tx-sender) tx-sender recipient)))
+        (ok total-votes)
+    )
+)
+
+(define-public (deposit (amount uint))
+    (stx-transfer? amount tx-sender (as-contract tx-sender))
+)
 
 ;; read only functions
 (define-read-only (get-vote (member principal) (recipient principal))
